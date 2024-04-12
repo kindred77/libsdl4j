@@ -1,5 +1,6 @@
 package kindred;
 
+import com.sun.jna.Memory;
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import io.github.libsdl4j.api.event.SDL_Event;
@@ -54,9 +55,10 @@ public class Test {
         MirLib mir_lib =new MirLib("/home/kindred/mywork/projects/cpp/devilutionX_kindred/my_asset/Prguse2_png.Lib");
         mir_lib.Initialize();
         MirImage img = mir_lib.GetMirImage(542);
-        Pointer data_p=new Pointer(img.header.length);
+        Memory memory = new Memory(img.header.length);
+        memory.write(0, img.data, 0, img.header.length);
+        Pointer data_p=memory.getPointer(0);
         System.out.println("----------------0000------------");
-        data_p.write(0, img.data, 0, img.data.length);
         System.out.println("----------------1111------------");
         SDL_RWops rwops = SDL_RWFromConstMem(data_p, img.header.length);
         System.out.println("----------------2222------------");
